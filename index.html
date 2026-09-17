@@ -168,7 +168,7 @@ const THEMES = [
  {t:"in",q:"Même plage (Chat, 12, Chien, 5, vide). Que renvoie =NBVAL(A2:A6) ?",a:["4"],e:"4 cellules non vides, texte compris."},
 ]},
 { id:"format", titre:"Formats CSV, XML, JSON", qs:[
- {t:"qcm",q:"Quel format utilise des balises comme <titre>…</titre> ?",c:["XML","CSV","JSON","TXT"],a:0,e:"XML : balises ouvrantes et fermantes, structure hiérarchique."},
+ {t:"qcm",q:"Quel format utilise des balises comme <code>&lt;titre&gt;</code>…<code>&lt;/titre&gt;</code> ?",c:["XML","CSV","JSON","TXT"],a:0,e:"XML : balises ouvrantes et fermantes, structure hiérarchique."},
  {t:"qcm",q:"Quel format utilise des accolades { } et des paires \"clé\": valeur ?",c:["JSON","XML","CSV","DOCX"],a:0,e:"JSON : objets entre accolades, listes entre crochets."},
  {t:"qcm",q:"Quel format est de type tableau, une ligne par objet, avec un séparateur ?",c:["CSV","XML","JSON","HTML"],a:0,e:"CSV = valeurs séparées (virgule ou point-virgule)."},
  {t:"vf",q:"Un fichier CSV peut utiliser le point-virgule comme séparateur.",a:true,e:"Le nom vient de « Comma », mais « ; » est très utilisé, notamment en France."},
@@ -176,7 +176,7 @@ const THEMES = [
  {t:"qcm",q:"Quel format est le plus utilisé par les applications web et les API ?",c:["JSON","CSV","XML","PDF"],a:0,e:"Quand une appli va chercher des données sur un serveur, c'est souvent du JSON."},
  {t:"qcm",q:"Un fichier .docx ou .xlsx est en réalité…",c:["une archive ZIP qui contient notamment des fichiers XML","un fichier CSV renommé","un fichier JSON","une image"],a:0,e:"Renomme un .docx en .zip et ouvre-le : tu verras des fichiers XML."},
  {t:"qcm",q:"Pour les mêmes données, quel est l'ordre habituel du plus léger au plus lourd ?",c:["CSV < JSON < XML","XML < JSON < CSV","JSON < CSV < XML","ils pèsent tous pareil"],a:0,e:"XML répète chaque nom de descripteur deux fois (balise ouvrante + fermante)."},
- {t:"vf",q:"En XML, <Nom> et </nom> se ferment correctement.",a:false,e:"Le XML distingue majuscules et minuscules : il faut </Nom>."},
+ {t:"vf",q:"En XML, la balise <code>&lt;Nom&gt;</code> est correctement fermée par <code>&lt;/nom&gt;</code>.",a:false,e:"Le XML distingue les majuscules des minuscules : il faut écrire <code>&lt;/Nom&gt;</code>."},
  {t:"qcm",q:"En JSON, comment écrit-on correctement un nombre ?",c:["\"annee\": 2024","\"annee\" = 2024","annee: \"2024\"","<annee>2024</annee>"],a:0,e:"Clé entre guillemets, deux-points, nombre sans guillemets."},
  {t:"qcm",q:"Un format ouvert est un format…",c:["lisible par n'importe quel logiciel (interopérabilité)","payant","réservé à un seul logiciel","toujours chiffré"],a:0,e:"CSV, XML et JSON sont des formats ouverts."},
  {t:"in",q:"Un CSV contient 1 ligne d'en-tête et 48 lignes de données. Combien d'objets ?",a:["48"],e:"L'en-tête ne compte pas : 48 objets."},
