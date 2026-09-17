@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNT · Réviser les données structurées · Lycée Jean Mermoz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F7F9; --card:#FFFFFF; --ink:#16324F; --text:#1F2A37; --muted:#5B6878; --line:#D6DEE6;
+  --teal:#0F8B8D; --tealsoft:#DDF1F1; --orange:#E07A1F; --good:#1E7A46; --goodsoft:#E3F4EA; --bad:#B33A3A; --badsoft:#FBE9E9; --code:#EEF2F6;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1720; --card:#17222E; --ink:#BFD6F2; --text:#E6ECF2; --muted:#9AA8B8; --line:#2A3947;
+    --teal:#3CC3C5; --tealsoft:#15383B; --orange:#F09A4B; --good:#5CC98A; --goodsoft:#173726; --bad:#F08080; --badsoft:#3A1C1C; --code:#1E2B38;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1720; --card:#17222E; --ink:#BFD6F2; --text:#E6ECF2; --muted:#9AA8B8; --line:#2A3947;
+  --teal:#3CC3C5; --tealsoft:#15383B; --orange:#F09A4B; --good:#5CC98A; --goodsoft:#173726; --bad:#F08080; --badsoft:#3A1C1C; --code:#1E2B38;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Lexend",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:28px 18px 60px}
+header .kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1;margin:.2em 0 .3em;color:var(--ink)}
+.lead{color:var(--muted);margin:0 0 24px;max-width:40em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;gap:6px;transition:transform .12s,border-color .12s}
+.tcard:hover{transform:translateY(-2px);border-color:var(--teal)}
+.tcard .num{font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--teal);font-weight:600;font-size:.85rem}
+.tcard b{font-size:1.02rem;color:var(--ink)}
+.tcard small{color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:auto}
+.bar i{display:block;height:100%;background:var(--teal)}
+.tcard.special{border-color:var(--orange)}
+.tcard.special .num{color:var(--orange)}
+.tcard.special .bar i{background:var(--orange)}
+h2{font-size:1.1rem;color:var(--ink);margin:28px 0 10px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.pill{font-size:.82rem;background:var(--tealsoft);color:var(--teal);padding:4px 10px;border-radius:99px;font-weight:500}
+.q{font-size:1.12rem;font-weight:500;margin:6px 0 14px}
+.opts{display:grid;gap:8px}
+.opt{font:inherit;color:inherit;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt.ok{border-color:var(--good);background:var(--goodsoft)}
+.opt.ko{border-color:var(--bad);background:var(--badsoft)}
+.opt:disabled{cursor:default}
+input.ans{font:inherit;font-family:"JetBrains Mono",ui-monospace,monospace;width:100%;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+input.ans:focus{outline:none;border-color:var(--teal)}
+.fb{margin-top:14px;padding:12px 14px;border-radius:10px;display:none}
+.fb.ok{display:block;background:var(--goodsoft);border-left:4px solid var(--good)}
+.fb.ko{display:block;background:var(--badsoft);border-left:4px solid var(--bad)}
+.fb strong{display:block;margin-bottom:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{font:500 1rem "Lexend",system-ui,sans-serif;border:0;border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--teal);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+pre,code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace}
+pre{background:var(--code);padding:12px 14px;border-radius:10px;overflow-x:auto;margin:8px 0 14px;font-size:.9rem;line-height:1.5}
+code{background:var(--code);padding:1px 5px;border-radius:5px;font-size:.92em}
+.sheetwrap{overflow-x:auto;margin:6px 0 14px}
+table.sheet{border-collapse:collapse;font-size:.88rem;min-width:420px}
+table.sheet th,table.sheet td{border:1px solid var(--line);padding:4px 9px;white-space:nowrap}
+table.sheet th{background:var(--code);color:var(--muted);font-weight:500}
+table.sheet tr.h td{font-weight:700;background:var(--tealsoft)}
+table.sheet td.n{text-align:right}
+.score{font-size:3rem;font-weight:700;color:var(--ink);margin:4px 0}
+.muted{color:var(--muted)}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots span.ok{background:var(--good)} .dots span.ko{background:var(--bad)} .dots span.cur{outline:2px solid var(--teal)}
+footer{margin-top:36px;font-size:.85rem;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.brand .badge{background:var(--ink);color:var(--bg);font-weight:700;letter-spacing:.06em;padding:8px 12px;border-radius:10px;font-size:1.1rem}
+.brand b{color:var(--ink)} .brand small{color:var(--muted)}
+.hero{background:linear-gradient(135deg,#16324F 0%,#0F6E78 100%);color:#fff;border-radius:18px;padding:22px 24px 20px;margin-bottom:6px}
+.hero .brand{border-bottom-color:rgba(255,255,255,.22)}
+.hero .brand .badge{background:#E07A1F;color:#fff}
+.hero .brand b{color:#fff} .hero .brand small{color:#CFE3EA}
+.hero .kicker{color:#F6B26B}
+.hero h1{color:#fff}
+.hero .lead{color:#DCEBF0;margin-bottom:0}
+.hint{font-size:.85rem;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+/* ============================ BANQUE DE QUESTIONS ============================ */
+// t:'qcm' (c: choix, a: index bonne) | t:'vf' (a: true/false) | t:'in' (a: réponses acceptées)
+const THEMES = [
+{ id:"info", titre:"Donnée et information", qs:[
+ {t:"qcm",q:"« 18 » écrit seul sur un papier, c'est…",c:["une donnée","une information","un descripteur","une collection"],a:0,e:"Sans contexte, on ne sait pas ce que 18 décrit : c'est une donnée."},
+ {t:"qcm",q:"« Il fait 18 °C à Lyon ce matin. » est…",c:["une information","une donnée seule","un format de fichier","une métadonnée"],a:0,e:"La donnée 18 °C est interprétée dans un contexte (lieu, moment) : elle devient une information."},
+ {t:"vf",q:"Une donnée est traitée par la machine, une information a du sens pour un humain.",a:true,e:"C'est la distinction de la fiche mémo."},
+ {t:"vf",q:"Une information est forcément un nombre.",a:false,e:"« Paris est la capitale de la France » est une information sans nombre."},
+ {t:"qcm",q:"Dans « La tour mesure 330 m de haut », quel est le descripteur ?",c:["la hauteur","la tour","330 m","mesure"],a:0,e:"objet = la tour · descripteur = hauteur · donnée = 330 m."},
+ {t:"qcm",q:"Dans « Le vélo coûte 450 € », quel est l'objet ?",c:["le vélo","le prix","450 €","l'euro"],a:0,e:"L'objet est l'élément décrit : le vélo."},
+ {t:"qcm",q:"Une donnée se compose d'une valeur et…",c:["de son unité, quand il y en a une","toujours d'un nom de personne","d'un fichier CSV","d'une formule"],a:0,e:"Ex. 5 m, 320 km/h : valeur + unité."},
+ {t:"vf",q:"La même donnée peut donner des informations différentes selon le contexte.",a:true,e:"« 37 » : une température corporelle, un âge, une pointure…"},
+]},
+{ id:"coll", titre:"Objets, descripteurs, collections", qs:[
+ {t:"qcm",q:"Dans une table, un objet correspond à…",c:["une ligne","une colonne","une cellule","l'en-tête"],a:0,e:"Chaque ligne = un objet ; chaque colonne = un descripteur."},
+ {t:"in",q:"Une table fait 31 lignes, ligne d'en-tête comprise. Combien d'objets contient-elle ?",a:["30"],e:"La ligne d'en-tête n'est pas un objet : 31 − 1 = 30."},
+ {t:"in",q:"Une table a 7 colonnes et 12 lignes (en-tête compris). Combien de descripteurs ?",a:["7"],e:"Un descripteur par colonne : 7."},
+ {t:"in",q:"Une table a 4 descripteurs et 25 objets. Combien de données contient-elle (sans compter l'en-tête) ?",a:["100"],e:"Une donnée par intersection objet × descripteur : 25 × 4 = 100."},
+ {t:"qcm",q:"Une collection, c'est…",c:["un ensemble d'objets décrits par les mêmes descripteurs","un seul objet très détaillé","un fichier de type image","une liste de formules"],a:0,e:"Définition de la fiche mémo."},
+ {t:"vf",q:"La ligne d'en-tête d'une table est un objet comme les autres.",a:false,e:"Elle donne le nom des descripteurs : ce n'est pas un objet."},
+ {t:"qcm",q:"Dans une collection de films, lequel est un descripteur ?",c:["Année de sortie","Titanic","1997","la 3e ligne"],a:0,e:"« Année de sortie » est une caractéristique commune à tous les films."},
+ {t:"qcm",q:"La valeur « 2008 » dans la colonne « Année » d'un film est…",c:["une donnée","un descripteur","un objet","une collection"],a:0,e:"C'est la valeur d'un descripteur pour un objet : une donnée."},
+]},
+{ id:"type", titre:"Types de données", qs:[
+ {t:"qcm",q:"« 03/09/2026 » est de type…",c:["date","texte","booléen","numérique"],a:0,e:"On peut l'ordonner dans le temps ou calculer une durée."},
+ {t:"qcm",q:"« Disponible : FAUX » est une donnée de type…",c:["booléen","texte","date","numérique"],a:0,e:"Booléen : VRAI ou FAUX, la réponse à un test."},
+ {t:"qcm",q:"Sur un descripteur de type texte (ex. Ville), on peut…",c:["trier de A à Z","calculer la moyenne","calculer la somme","trouver le maximum numérique"],a:0,e:"Le texte se trie, se compte, se filtre, mais ne se calcule pas."},
+ {t:"vf",q:"On peut calculer la moyenne d'une colonne « Titre ».",a:false,e:"« Moyenne des titres » n'a aucun sens : ce n'est pas numérique."},
+ {t:"qcm",q:"Une cellule contient « 12 € ». Le tableur la considère comme…",c:["du texte","un nombre","une date","un booléen"],a:0,e:"Unité dans la cellule → texte → calcul impossible. L'unité va dans l'en-tête : Prix (€)."},
+ {t:"qcm",q:"Où doit-on écrire l'unité dans un tableur ?",c:["dans l'en-tête du descripteur, ex. Masse (kg)","dans chaque cellule, ex. 12 kg","dans le nom du fichier","nulle part, on l'oublie"],a:0,e:"Une seule fois dans l'en-tête ; la cellule ne contient que le nombre."},
+ {t:"qcm",q:"Quel traitement est possible sur un descripteur de type date ?",c:["calculer une durée entre deux dates","calculer une moyenne de noms","trier par couleur","compter les voyelles"],a:0,e:"Une date peut être ordonnée et servir à calculer une durée."},
+ {t:"vf",q:"Le traitement possible dépend du type de la donnée.",a:true,e:"C'est la règle de la fiche mémo."},
+]},
+{ id:"perso", titre:"Données personnelles, métadonnées, BDD", qs:[
+ {t:"qcm",q:"Laquelle est une donnée personnelle ?",c:["le numéro de téléphone de Léa","la population du Chili","l'altitude de l'Everest","le prix d'un kilo de pommes"],a:0,e:"Un numéro permet d'identifier une personne."},
+ {t:"vf",q:"Une photo de visage est une donnée personnelle.",a:true,e:"Elle permet d'identifier directement une personne."},
+ {t:"vf",q:"Un identifiant de connexion (pseudo) peut être une donnée personnelle.",a:true,e:"Il permet d'identifier indirectement une personne."},
+ {t:"qcm",q:"Une métadonnée, c'est…",c:["une donnée qui décrit une autre donnée ou un fichier","une donnée très grande","une donnée secrète","un type de tableur"],a:0,e:"Ex. date, GPS, modèle d'appareil d'une photo."},
+ {t:"qcm",q:"Laquelle est une métadonnée d'une photo ?",c:["le modèle du smartphone qui l'a prise","la couleur du ciel sur l'image","le prénom de la personne photographiée","le titre du cours"],a:0,e:"Le modèle d'appareil est enregistré avec le fichier, sans qu'on le voie."},
+ {t:"vf",q:"Les métadonnées d'une photo partent souvent avec le fichier quand on l'envoie.",a:true,e:"D'où le risque de partager sa position GPS sans le savoir."},
+ {t:"qcm",q:"Un réseau social avec des millions d'utilisateurs stocke ses données dans…",c:["une base de données","un tableur","un seul fichier CSV","une métadonnée"],a:0,e:"La base de données gère plusieurs collections reliées à très grande échelle."},
+ {t:"vf",q:"Un tableur suffit pour gérer quelques centaines d'objets.",a:true,e:"Oui ; pour des millions, on utilise une base de données."},
+]},
+{ id:"reper", titre:"Se repérer dans le tableur", qs:[
+ {t:"in",q:"Combien de cellules contient la plage A1:A20 ?",a:["20"],e:"De la ligne 1 à la ligne 20 : 20 cellules."},
+ {t:"in",q:"Combien de cellules contient la plage B2:D2 ?",a:["3"],e:"Colonnes B, C, D sur une seule ligne : 3 cellules."},
+ {t:"in",q:"Combien de cellules contient la plage A1:B5 ?",a:["10"],e:"2 colonnes × 5 lignes = 10 cellules."},
+ {t:"in",q:"Écris la référence de la cellule en colonne F, ligne 12.",a:["f12"],e:"Lettre de colonne puis numéro de ligne : F12."},
+ {t:"qcm",q:"Une formule de tableur commence par…",c:["=","+",":","#"],a:0,e:"Toute formule commence par =."},
+ {t:"vf",q:"Une formule se recalcule automatiquement si une donnée change.",a:true,e:"C'est tout l'intérêt des formules."},
+ {t:"qcm",q:"Dans Google Sheets, le séparateur d'arguments d'une formule est…",c:["le point-virgule ;","le point .","le tiret -","la barre /"],a:0,e:"=NB.SI(B2:B9;\"Oui\") : le ; sépare les arguments."},
+ {t:"in",q:"Quelle plage désigne les cellules C3 à C15 ? (écris-la)",a:["c3:c15"],e:"Notation début:fin → C3:C15."},
+]},
+{ id:"trier", titre:"Trier et filtrer", qs:[
+ {t:"qcm",q:"Trier une table…",c:["change l'ordre des objets sans rien supprimer","supprime les objets en double","cache certains objets","calcule une moyenne"],a:0,e:"Les lignes restent entières, seul l'ordre change."},
+ {t:"qcm",q:"Filtrer une table…",c:["cache les objets non retenus sans les effacer","supprime définitivement les objets","trie la table de A à Z","change le type des données"],a:0,e:"Retirer le filtre fait réapparaître toute la collection."},
+ {t:"vf",q:"Pour trier, on peut sélectionner seulement la colonne à trier.",a:false,e:"Non ! Les objets seraient mélangés : il faut sélectionner toute la table."},
+ {t:"qcm",q:"Pour afficher uniquement les films sortis après 2010, on utilise…",c:["un filtre par condition (Année > 2010)","un tri A→Z sur le titre","=SOMME(Année)","un filtre par couleur de police"],a:0,e:"Filtre par condition sur le descripteur Année."},
+ {t:"qcm",q:"Pour classer des pays du plus peuplé au moins peuplé, on fait…",c:["un tri Z→A (décroissant) sur Population","un tri A→Z sur Population","un filtre Population = 0","=MIN(Population)"],a:0,e:"Décroissant = du plus grand au plus petit."},
+ {t:"qcm",q:"Quel menu permet de créer un filtre dans Google Sheets ?",c:["Données ▸ Créer un filtre","Insertion ▸ Graphique","Format ▸ Nombre","Fichier ▸ Imprimer"],a:0,e:"Un entonnoir apparaît alors sur chaque descripteur."},
+ {t:"vf",q:"Lors d'un tri, il faut cocher « La plage contient une ligne d'en-tête ».",a:true,e:"Sinon l'en-tête serait trié avec les objets."},
+ {t:"qcm",q:"Colorer automatiquement les vitesses > 100 en vert, c'est…",c:["une mise en forme conditionnelle","un filtre","un tri","une métadonnée"],a:0,e:"Format ▸ Mise en forme conditionnelle."},
+]},
+{ id:"fonc", titre:"Fonctions du tableur", qs:[
+ {t:"qcm",q:"Quelle fonction compte les cellules non vides, texte compris ?",c:["=NBVAL","=NB","=SOMME","=MAX"],a:0,e:"NBVAL (COUNTA) compte tout ce qui n'est pas vide."},
+ {t:"qcm",q:"=NB(A2:A10) compte…",c:["les cellules contenant un nombre","toutes les cellules non vides","les cellules vides","les cellules contenant du texte"],a:0,e:"NB (COUNT) ne compte que les nombres."},
+ {t:"in",q:"B2:B4 contient 4, 7 et 10. Que renvoie =SOMME(B2:B4) ?",a:["21"],e:"4 + 7 + 10 = 21."},
+ {t:"in",q:"B2:B5 contient 10, 20, 30 et 40. Que renvoie =MOYENNE(B2:B5) ?",a:["25"],e:"(10+20+30+40) ÷ 4 = 25."},
+ {t:"in",q:"Que renvoie =ARRONDI(7,86;1) ?",a:["7,9","7.9"],e:"Arrondi à 1 décimale : 7,86 → 7,9."},
+ {t:"in",q:"C4 vaut 15. Que renvoie =SI(C4>=15;\"reçu\";\"refusé\") ?",a:["reçu","recu"],e:"15 ≥ 15 est vrai → « reçu ». Attention : > et >= ne donnent pas le même résultat."},
+ {t:"qcm",q:"Quelle formule additionne le prix (colonne C) des seuls objets « Bio » (colonne B) ?",c:["=SOMME.SI(B2:B9;\"Bio\";C2:C9)","=NB.SI(B2:B9;\"Bio\")","=SOMME(C2:C9)","=SI(B2:B9;\"Bio\")"],a:0,e:"SOMME.SI(plage_critère ; critère ; plage_somme)."},
+ {t:"qcm",q:"=AVERAGE(C2:C9) dans Google Sheets…",c:["fonctionne comme =MOYENNE(C2:C9)","provoque toujours une erreur","calcule la somme","compte les cellules"],a:0,e:"Les noms anglais marchent aussi."},
+ {t:"in",q:"A2:A6 contient : Chat, 12, Chien, 5, (vide). Que renvoie =NB(A2:A6) ?",a:["2"],e:"Seuls 12 et 5 sont des nombres."},
+ {t:"in",q:"Même plage (Chat, 12, Chien, 5, vide). Que renvoie =NBVAL(A2:A6) ?",a:["4"],e:"4 cellules non vides, texte compris."},
+]},
+{ id:"format", titre:"Formats CSV, XML, JSON", qs:[
+ {t:"qcm",q:"Quel format utilise des balises comme <titre>…</titre> ?",c:["XML","CSV","JSON","TXT"],a:0,e:"XML : balises ouvrantes et fermantes, structure hiérarchique."},
+ {t:"qcm",q:"Quel format utilise des accolades { } et des paires \"clé\": valeur ?",c:["JSON","XML","CSV","DOCX"],a:0,e:"JSON : objets entre accolades, listes entre crochets."},
+ {t:"qcm",q:"Quel format est de type tableau, une ligne par objet, avec un séparateur ?",c:["CSV","XML","JSON","HTML"],a:0,e:"CSV = valeurs séparées (virgule ou point-virgule)."},
+ {t:"vf",q:"Un fichier CSV peut utiliser le point-virgule comme séparateur.",a:true,e:"Le nom vient de « Comma », mais « ; » est très utilisé, notamment en France."},
+ {t:"vf",q:"Le JSON est toujours meilleur que le CSV parce qu'il est plus moderne.",a:false,e:"Le choix dépend de l'usage : un CSV est parfait pour un tableur et plus léger."},
+ {t:"qcm",q:"Quel format est le plus utilisé par les applications web et les API ?",c:["JSON","CSV","XML","PDF"],a:0,e:"Quand une appli va chercher des données sur un serveur, c'est souvent du JSON."},
+ {t:"qcm",q:"Un fichier .docx ou .xlsx est en réalité…",c:["une archive ZIP qui contient notamment des fichiers XML","un fichier CSV renommé","un fichier JSON","une image"],a:0,e:"Renomme un .docx en .zip et ouvre-le : tu verras des fichiers XML."},
+ {t:"qcm",q:"Pour les mêmes données, quel est l'ordre habituel du plus léger au plus lourd ?",c:["CSV < JSON < XML","XML < JSON < CSV","JSON < CSV < XML","ils pèsent tous pareil"],a:0,e:"XML répète chaque nom de descripteur deux fois (balise ouvrante + fermante)."},
+ {t:"vf",q:"En XML, <Nom> et </nom> se ferment correctement.",a:false,e:"Le XML distingue majuscules et minuscules : il faut </Nom>."},
+ {t:"qcm",q:"En JSON, comment écrit-on correctement un nombre ?",c:["\"annee\": 2024","\"annee\" = 2024","annee: \"2024\"","<annee>2024</annee>"],a:0,e:"Clé entre guillemets, deux-points, nombre sans guillemets."},
+ {t:"qcm",q:"Un format ouvert est un format…",c:["lisible par n'importe quel logiciel (interopérabilité)","payant","réservé à un seul logiciel","toujours chiffré"],a:0,e:"CSV, XML et JSON sont des formats ouverts."},
+ {t:"in",q:"Un CSV contient 1 ligne d'en-tête et 48 lignes de données. Combien d'objets ?",a:["48"],e:"L'en-tête ne compte pas : 48 objets."},
+]},
+];
+
+/* ============================ GÉNÉRATEURS ============================ */
+const R = (a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick = a=>a[Math.floor(Math.random()*a.length)];
+const shuffle = a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const fr = n=>String(Math.round(n*100)/100).replace('.',',');
+
+const COLLS = [
+ {nom:"jeux vidéo", h:["Jeu","Genre","Prix (€)","Note (/20)","Joueurs max"], noms:["Pixel Quest","Star Drift","Mega Kart","Zombie Farm","Ocean Run","Robo Chef","Sky Tower","Neon Race"], cat:["Course","Aventure","Puzzle"], c:[10,70,5], d:[8,20,1], e:[1,8,1]},
+ {nom:"vélos", h:["Modèle","Type","Prix (€)","Poids (kg)","Vitesses"], noms:["Rando 1","Urban X","Speed 7","Trail Pro","City Go","Mont 3","Aero S","Comet"], cat:["VTT","Route","Ville"], c:[200,900,50], d:[7,16,1], e:[1,21,1]},
+ {nom:"films", h:["Titre","Genre","Durée (min)","Année","Note (/10)"], noms:["L'Île rouge","Nuit bleue","Robot 9","Le Pont","Orage","Cap Nord","Les Loups","Minuit"], cat:["Drame","Comédie","SF"], c:[80,160,5], d:[1990,2024,1], e:[3,10,1]},
+ {nom:"restaurants", h:["Nom","Cuisine","Prix moyen (€)","Places","Note (/5)"], noms:["Chez Lili","Le Wok","Pampa","Sakura","La Piazza","Le Zinc","Taco Loco","Le Phare"], cat:["Italienne","Asiatique","Française"], c:[10,40,5], d:[20,120,10], e:[1,5,1]},
+];
+function genTable(){
+  const C = pick(COLLS), n = 6;
+  const noms = shuffle(C.noms).slice(0,n);
+  const cats = shuffle(C.cat);
+  const rows = noms.map((nm,i)=>{
+    const st = (a)=>R(0,Math.floor((a[1]-a[0])/a[2]))*a[2]+a[0];
+    return [nm, i<2?cats[i]:pick(cats), st(C.c), st(C.d), st(C.e)];
+  });
+  return {C, rows};
+}
+function sheetHTML(C, rows){
+  let h = '<div class="sheetwrap"><table class="sheet"><tr><th></th>'+["A","B","C","D","E"].map(x=>`<th>${x}</th>`).join("")+'</tr>';
+  h += '<tr class="h"><th>1</th>'+C.h.map(x=>`<td>${x}</td>`).join("")+'</tr>';
+  rows.forEach((r,i)=>{ h += `<tr><th>${i+2}</th>`+r.map((v,j)=>`<td class="${j>1?'n':''}">${v}</td>`).join("")+'</tr>'; });
+  return h+'</table></div>';
+}
+function genCalc(){
+  const {C, rows} = genTable(); const last = rows.length+1; const col = pick(["C","D","E"]); const ci = {C:2,D:3,E:4}[col];
+  const vals = rows.map(r=>r[ci]); const cat = pick(rows)[1];
+  const kinds = [
+    ()=>({f:`=SOMME(${col}2:${col}${last})`, a:vals.reduce((x,y)=>x+y,0), e:`${vals.join(" + ")}`}),
+    ()=>({f:`=MAX(${col}2:${col}${last})`, a:Math.max(...vals), e:`La plus grande valeur de ${C.h[ci]}.`}),
+    ()=>({f:`=MIN(${col}2:${col}${last})`, a:Math.min(...vals), e:`La plus petite valeur de ${C.h[ci]}.`}),
+    ()=>({f:`=NB.SI(B2:B${last};"${cat}")`, a:rows.filter(r=>r[1]===cat).length, e:`On compte les lignes où B vaut « ${cat} ».`}),
+    ()=>{const sel=rows.filter(r=>r[1]===cat).map(r=>r[ci]); return {f:`=SOMME.SI(B2:B${last};"${cat}";${col}2:${col}${last})`, a:sel.reduce((x,y)=>x+y,0), e:`Seulement les objets « ${cat} » : ${sel.join(" + ")}`};},
+    ()=>({f:`=NB(A2:A${last})`, a:0, e:`La colonne A ne contient que du texte : NB compte les nombres → 0.`}),
+    ()=>({f:`=NBVAL(A1:A${last})`, a:last, e:`${last} cellules non vides, en-tête compris.`}),
+    ()=>{const k=R(0,rows.length-1), v=rows[k][ci], s=pick([v, v-1, v+1]); const op=pick([">",">="]); const ok= op===">"? v>s : v>=s;
+         return {f:`=SI(${col}${k+2}${op}${s};"OUI";"NON")`, a:ok?"OUI":"NON", e:`${col}${k+2} vaut ${v}. ${v} ${op} ${s} est ${ok?"vrai":"faux"}.`};},
+    ()=>{const s=vals.reduce((x,y)=>x+y,0); const m=s/vals.length;
+         return {f:`=ARRONDI(MOYENNE(${col}2:${col}${last});0)`, a:Math.round(m), e:`(${vals.join(" + ")}) ÷ ${vals.length} = ${fr(m)} → arrondi à l'unité : ${Math.round(m)}.`};},
+  ];
+  const k = pick(kinds)();
+  const a = typeof k.a==="number" ? [String(k.a), fr(k.a)] : [k.a.toLowerCase()];
+  return {t:"in", html:`Collection de <b>${C.nom}</b> :`+sheetHTML(C,rows), q:`Que renvoie <code>${k.f}</code> ?`, a, e:k.e, gen:true};
+}
+function genRange(){
+  const c1=R(0,3), c2=c1+R(0,2), r1=R(1,9), r2=r1+R(0,14); const L="ABCDEFG";
+  const p=`${L[c1]}${r1}:${L[c2]}${r2}`, n=(c2-c1+1)*(r2-r1+1);
+  return {t:"in", q:`Combien de cellules contient la plage <code>${p}</code> ?`, a:[String(n)], e:`${c2-c1+1} colonne(s) × ${r2-r1+1} ligne(s) = ${n}.`, gen:true};
+}
+const OBJ = [
+ {tag:"ville", root:"villes", k:["nom","pays","habitants"], v:[["Lima","Perou",10],["Oslo","Norvege",1],["Quito","Equateur",3]]},
+ {tag:"jeu", root:"jeux", k:["titre","genre","joueurs"], v:[["Mega Kart","Course",8],["Robo Chef","Puzzle",2],["Sky Tower","Aventure",4]]},
+ {tag:"oiseau", root:"oiseaux", k:["nom","couleur","envergure_cm"], v:[["Mesange","bleu",18],["Corbeau","noir",100],["Flamant","rose",150]]},
+];
+function genFormat(){
+  const o = pick(OBJ); const objs = shuffle(o.v).slice(0,2); const fmt = pick(["CSV","XML","JSON"]);
+  const q = v=>typeof v==="number"?v:`"${v}"`;
+  let code;
+  if(fmt==="CSV") code = [o.k.join(";"), ...objs.map(x=>x.join(";"))].join("\n");
+  if(fmt==="XML") code = [`<${o.root}>`, ...objs.flatMap(x=>[`  <${o.tag}>`, ...o.k.map((k,i)=>`    <${k}>${x[i]}</${k}>`), `  </${o.tag}>`]), `</${o.root}>`].join("\n");
+  if(fmt==="JSON") code = ["[", objs.map(x=>"  { "+o.k.map((k,i)=>`"${k}": ${q(x[i])}`).join(", ")+" }").join(",\n"), "]"].join("\n");
+  const variant = pick(["fmt","nb","val"]);
+  const esc = s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const pre = `<pre>${esc(code)}</pre>`;
+  if(variant==="fmt") return {t:"qcm", html:pre, q:"Quel est le format de ce fichier ?", c:["CSV","XML","JSON"], a:["CSV","XML","JSON"].indexOf(fmt), e:{CSV:"Une ligne d'en-tête puis une ligne par objet, valeurs séparées par « ; ».",XML:"Balises ouvrantes et fermantes, imbriquées.",JSON:"Crochets pour la liste, accolades et paires \"clé\": valeur."}[fmt], gen:true, fixed:true};
+  if(variant==="nb") return {t:"in", html:pre, q:"Combien d'objets ce fichier décrit-il ?", a:["2"], e:"Deux objets"+(fmt==="CSV"?" : la première ligne est l'en-tête.":"."), gen:true};
+  const i = R(0,1), k = R(0,2);
+  return {t:"in", html:pre, q:`Quelle est la valeur de « ${o.k[k]} » pour le ${i===0?"premier":"deuxième"} objet ?`, a:[String(objs[i][k]).toLowerCase()], e:`Réponse : ${objs[i][k]}.`, gen:true};
+}
+const GENS = [
+ {id:"gcalc", titre:"Calculs dans le tableur", sous:"SOMME, MAX, NB.SI, SOMME.SI, SI…", gen:genCalc},
+ {id:"gform", titre:"Lire CSV, XML et JSON", sous:"Reconnaître et lire un fichier", gen:genFormat},
+ {id:"grange", titre:"Plages de cellules", sous:"Compter les cellules d'une plage", gen:genRange},
+];
+
+/* ============================ ÉTAT & STOCKAGE ============================ */
+const KEY = "snt-donnees-revision-v1";
+let store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e) { store = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} }
+function best(id){ return (store[id] && store[id].best) || 0; }
+
+const app = document.getElementById("app");
+const norm = s=>String(s).trim().toLowerCase().replace(/\s+/g,"").replace(/[«»"]/g,"").replace(/^=/,"");
+const esc = s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+function prep(q){ // mélange les choix des QCM statiques
+  if(q.t!=="qcm" || q.fixed) return {...q};
+  const idx = shuffle(q.c.map((_,i)=>i));
+  return {...q, c: idx.map(i=>q.c[i]), a: idx.indexOf(q.a)};
+}
+
+/* ============================ ÉCRANS ============================ */
+function home(){
+  const card = (id,num,titre,sous,pct,special)=>`<button class="tcard ${special?'special':''}" data-go="${id}">
+    <span class="num">${num}</span><b>${titre}</b><small>${sous}</small>
+    <div class="bar" aria-label="meilleur score ${pct} %"><i style="width:${pct}%"></i></div></button>`;
+  app.innerHTML = `<header class="hero"><div class="brand"><span class="badge">SNT</span><span><b>Lycée Jean Mermoz</b><br><small>Seconde · Prof : M. Barrasa</small></span></div>
+    <div class="kicker">Révisions</div>
+    <h1>Données structurées</h1>
+    <p class="lead">Entraîne-toi thème par thème, puis teste-toi avec une mini-évaluation. Chaque réponse est corrigée et expliquée. Ta progression reste enregistrée sur cet appareil.</p></header>
+    <h2>Mini-évaluation</h2>
+    <div class="grid">${card("exam","12 QUESTIONS · /20","Mini-évaluation","Questions tirées au hasard dans tous les thèmes",best("exam"),true)}</div>
+    <h2>Par thème</h2>
+    <div class="grid">${THEMES.map((t,i)=>card(t.id, `THÈME ${i+1} · ${t.qs.length} Q`, t.titre, "Questions de cours", best(t.id))).join("")}</div>
+    <h2>Exercices pratiques</h2>
+    <p class="muted" style="margin:-4px 0 12px">De nouvelles questions sont générées à chaque essai : recommence autant que tu veux.</p>
+    <div class="grid">${GENS.map(g=>card(g.id,"10 QUESTIONS · NOUVELLES À CHAQUE ESSAI",g.titre,g.sous,best(g.id),true)).join("")}</div>
+    <footer>SNT · Lycée Jean Mermoz · M. Barrasa<br>La barre indique ton meilleur score. <button class="btn ghost" id="reset" style="padding:4px 10px;font-size:.85rem;margin-left:6px">Effacer ma progression</button></footer>`;
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>start(b.dataset.go));
+  document.getElementById("reset").onclick=()=>{ if(confirm("Effacer toute ta progression ?")){ store={}; save(); home(); } };
+  window.scrollTo(0,0);
+}
+
+function start(id){
+  let qs, titre, exam=false;
+  const th = THEMES.find(t=>t.id===id), g = GENS.find(x=>x.id===id);
+  if(th){ qs = shuffle(th.qs).map(prep); titre = th.titre; }
+  else if(g){ qs = Array.from({length:10}, ()=>g.gen()); titre = g.titre; }
+  else { exam=true; titre="Mini-évaluation";
+    const pool = shuffle(THEMES.flatMap(t=>t.qs.map(q=>({...q, theme:t.titre}))));
+    qs = [...pool.slice(0,8).map(prep), genCalc(), genCalc(), genFormat(), genRange()];
+    qs = shuffle(qs); }
+  run({id, titre, qs, i:0, res:[], exam});
+}
+
+function run(S){
+  const q = S.qs[S.i];
+  const dots = S.qs.map((_,k)=>`<span class="${S.res[k]===true?'ok':S.res[k]===false?'ko':''} ${k===S.i?'cur':''}"></span>`).join("");
+  let body = "";
+  if(q.t==="qcm") body = `<div class="opts">${q.c.map((c,k)=>`<button class="opt" data-k="${k}">${esc(c)}</button>`).join("")}</div>`;
+  if(q.t==="vf") body = `<div class="opts"><button class="opt" data-k="1">Vrai</button><button class="opt" data-k="0">Faux</button></div>`;
+  if(q.t==="in") body = `<form id="f" autocomplete="off"><label for="ans" class="muted" style="font-size:.9rem">Ta réponse</label>
+     <input class="ans" id="ans" inputmode="text"><div class="hint">Nombres : la virgule ou le point sont acceptés.</div>
+     <div class="row"><button class="btn" type="submit">Valider</button></div></form>`;
+  app.innerHTML = `<div class="top"><button class="btn ghost" id="back">← Accueil</button><span class="pill">SNT · ${esc(S.titre)} · ${S.i+1} / ${S.qs.length}</span></div>
+    <div class="dots" aria-hidden="true" style="margin-bottom:14px">${dots}</div>
+    <div class="panel">${q.html||""}<div class="q">${q.q}</div>${body}
+    <div class="fb" id="fb" role="status"></div>
+    <div class="row" id="nextrow" style="display:none"><button class="btn" id="next">${S.i+1<S.qs.length?"Question suivante →":"Voir mon score"}</button></div></div>`;
+  document.getElementById("back").onclick = home;
+  const done = ok=>{
+    S.res[S.i]=ok;
+    const fb = document.getElementById("fb");
+    let good = q.t==="qcm" ? q.c[q.a] : q.t==="vf" ? (q.a?"Vrai":"Faux") : q.a[0];
+    fb.className = "fb "+(ok?"ok":"ko");
+    fb.innerHTML = `<strong>${ok?"Bonne réponse !":"Pas tout à fait. Réponse attendue : "+esc(good)}</strong>${q.e}`;
+    document.getElementById("nextrow").style.display="flex";
+    const nx = document.getElementById("next"); nx.focus();
+    nx.onclick = ()=>{ S.i++; S.i<S.qs.length ? run(S) : end(S); };
+  };
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const k = +b.dataset.k; const right = q.t==="qcm" ? q.a : (q.a?1:0);
+    app.querySelectorAll(".opt").forEach(x=>{ x.disabled=true; if(+x.dataset.k===right) x.classList.add("ok"); });
+    if(k!==right) b.classList.add("ko");
+    done(k===right);
+  });
+  const f = document.getElementById("f");
+  if(f){ const inp=document.getElementById("ans"); inp.focus();
+    f.onsubmit = e=>{ e.preventDefault(); if(!inp.value.trim()) return;
+      inp.disabled=true; f.querySelector("button").disabled=true;
+      const v = norm(inp.value).replace(",","."); done(q.a.some(a=>norm(a).replace(",",".")===v)); }; }
+  window.scrollTo(0,0);
+}
+
+function end(S){
+  const n = S.res.filter(Boolean).length, tot = S.qs.length, pct = Math.round(100*n/tot);
+  store[S.id] = {best: Math.max(best(S.id), pct), last: pct}; save();
+  const note = S.exam ? `<div class="score">${fr(Math.round(20*n/tot*2)/2)} / 20</div>` : `<div class="score">${n} / ${tot}</div>`;
+  const msg = pct>=85 ? "Excellent, tu maîtrises ce thème." : pct>=60 ? "Bien ! Relis les explications des erreurs et recommence." : "Relis ta fiche mémo, puis réessaie : chaque essai mélange les questions.";
+  const wrong = S.qs.map((q,k)=>({q,k})).filter(x=>!S.res[x.k]);
+  app.innerHTML = `<div class="top"><button class="btn ghost" id="back">← Accueil</button><span class="pill">${esc(S.titre)}</span></div>
+    <div class="panel"><div class="muted">Ton score</div>${note}<p>${msg}</p>
+    ${wrong.length?`<h2>À revoir</h2>`+wrong.map(x=>`<p><b>${x.k+1}.</b> ${x.q.q.replace(/<pre>[\s\S]*<\/pre>/,"")}<br><span class="muted">${x.q.e}</span></p>`).join(""):""}
+    <div class="row"><button class="btn" id="again">Recommencer</button><button class="btn ghost" id="home2">Choisir un autre thème</button></div></div>`;
+  document.getElementById("back").onclick = home;
+  document.getElementById("home2").onclick = home;
+  document.getElementById("again").onclick = ()=>start(S.id);
+  window.scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>
